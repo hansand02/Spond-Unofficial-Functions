@@ -4,7 +4,7 @@ import csv
 import os
 from datetime import date
 from spond import spond
-from config.config import username, password
+from config import username, password
 
 parser = argparse.ArgumentParser(
     description="Creates an attendance.csv for organizers of events."
@@ -36,17 +36,12 @@ args = parser.parse_args()
 async def getAllResponses():
     
     s = spond.Spond(username=username, password=password)
-    events = await s.get_events( )
+    events = await s.get_events(min_start=args.f, max_end=args.t)
 
-    foldername = "./exports"
+    foldername = "./exports/allResponses"
 
     if not os.path.exists(foldername):
         os.makedirs(foldername)
-
-
-    # create a dict of all members, find members from events. 
-    people = {}
-
 
     
     for e in events:
@@ -103,6 +98,7 @@ async def processRespondent(s: spond.Spond, spamwriter, respondent, event, respo
     """ Process the respondent, can have different types: accepted, declined, unanswered, unconfirmed, waitinglist """
     
     response_types = ["accepted", "declined", "unanswered", "unconfirmed", "waitinglist"]
+
 
     if response_type.lower() not in response_types:
         raise ValueError("Invalid response_type: " + response_type + ", must be one of: " + ", ".join(response_types))

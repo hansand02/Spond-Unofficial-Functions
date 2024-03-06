@@ -4,10 +4,16 @@ import csv
 import os
 from datetime import date
 from spond import spond
-from config.config import username, password
+from config import username, password
 from enum import Enum
-from responseTypes import ResponseTypes
 
+
+class ResponseTypes(Enum):
+    ACCEPTED = "accepted"
+    DECLINED = "declined"
+    UNANSWERED = "unanswered"
+    UNCONFIRMED = "unconfirmed"
+    WAITINGLIST = "waitinglist"
 
 parser = argparse.ArgumentParser(
     description="Creates an attendance.csv for organizers of events."
@@ -50,7 +56,7 @@ async def totalAttendance():
     s = spond.Spond(username=username, password=password)
     events = await s.get_events( )
 
-    foldername = "./exports"
+    foldername = "../exports/totalAttendance"
 
     if not os.path.exists(foldername):
         os.makedirs(foldername)
@@ -58,17 +64,38 @@ async def totalAttendance():
 
     # create a dict of all members, find members from events. 
     people = {}
-    await calculateAttendance("accepted")
+
+    for e in events:
+        filename = os.path.join(
+            foldername, f"{e['startTimestamp']}-{e['heading']}.csv"
+        )
+        with open(filename, "w", newline="") as csvfile:
+            
+            spamwriter = csv.writer(
+                csvfile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
+            )
+
+            spamwriter.writerow(
+                ["Start", "End", "Name", "Accepted", "Declined", "Unanswered", "Unconfirmed", "Waitinglist"]
+            )
+
+            
+
+
+
+
+    await s.clientsession.close()
+
 
 
 
 async def calculateAttendance(response_type):
     """ Process the respondent, can have different types: accepted, declined, unanswered, unconfirmed, waitinglist """
 
-    print(list(ResponseTypes), " liste ja")
+    acceptedResponses  = [response.value for response in ResponseTypes]
 
-    if response_type.lower() not in list(ResponseTypes):
-        raise ValueError("Invalid response_type: " + response_type + ", must be one of: " + ", ".join(response_type))
+    if response_type.lower() not in acceptedResponses:
+        raise ValueError("Invalid response_type: " + response_type + ", must be one of: " + ", ".join(acceptedResponses))
 
 
 if __name__ == "__main__":
