@@ -5,7 +5,7 @@ import csv
 import os
 from datetime import date
 from spond import spond
-from configReal import username, password
+from config import username, password
 from datetime import datetime
 from person import Person
 
