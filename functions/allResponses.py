@@ -1,6 +1,5 @@
 import asyncio
 import argparse
-import asyncio
 import csv
 import os
 from datetime import date
@@ -28,22 +27,13 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "-n",
-    "--names",
-    help="Only include these names. Cap sensitive",
-    type=lambda s: [name.strip().title() for name in s.split(",")],
-    default=[None],
-    dest="n",
-)
-
-parser.add_argument(
-    "-a", help="Also include all members", default=True, action="store_true"
+    "-a", help="Show all members", default=True, action="store_true"
 )
 
 args = parser.parse_args()
 
 
-async def main():
+async def getAllResponses():
     
     s = spond.Spond(username=username, password=password)
     events = await s.get_events( )
@@ -133,5 +123,5 @@ async def processRespondent(s: spond.Spond, spamwriter, respondent, event, respo
 
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
-asyncio.run(main())
+asyncio.run(getAllResponses())
 
