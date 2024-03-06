@@ -1,5 +1,5 @@
-SpecificPeopleList:
-	python test.py -n "hans andersen, otto soleVåg"
+named responses:
+	python ./functions/allResponses.py -n "hans andersen, otto soleVåg"
 
-AllPeopleList:
-	python test.py
+all responses:
+	python ./functions/allResponses.py

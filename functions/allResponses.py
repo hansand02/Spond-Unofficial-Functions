@@ -5,9 +5,7 @@ import csv
 import os
 from datetime import date
 from spond import spond
-from config import username, password
-from datetime import datetime
-from person import Person
+from config.config import username, password
 
 parser = argparse.ArgumentParser(
     description="Creates an attendance.csv for organizers of events."
