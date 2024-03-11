@@ -4,10 +4,10 @@ import csv
 import os
 from datetime import date
 from spond import spond
-from config import username, password
+from config.config import username, password
 from enum import Enum
 from collections import defaultdict
-from person import Person
+from objects.person import Person
 from dateutil.relativedelta import relativedelta
 
 class ResponseTypes(Enum):
@@ -103,7 +103,7 @@ async def totalAttendance():
         )
 
         spamwriter.writerow(
-            ["Start", "End", "Name", "Accepted", "Declined", "Unanswered", "Unconfirmed", "Waitinglist"]
+            ["Name", "Start->End", "Accepted", "Declined", "Unanswered", "Unconfirmed", "Waitinglist"]
         ) 
         sorted_people = sorted(people.values(), key=lambda x: x[0].accepted, reverse=True)
 
@@ -124,6 +124,7 @@ async def totalAttendance():
          
 async def addAttendesToDict(spondObject, personID, theDict, response_type):
     person = await spondObject.get_person(personID)
+    
     if personID not in theDict:
         pObjekt = Person(person["firstName"] + " " + person["lastName"])
         theDict[personID] = ([pObjekt])  # Fix: Pass the Person object as an iterable containing a single element
