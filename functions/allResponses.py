@@ -4,8 +4,7 @@ import csv
 import os
 from datetime import date
 from spond import spond
-from config.config import username, password
-
+import '../config.yaml'
 parser = argparse.ArgumentParser(
     description="Creates an attendance.csv for organizers of events."
 )
